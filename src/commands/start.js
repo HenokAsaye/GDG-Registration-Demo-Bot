@@ -5,5 +5,5 @@ import { getMainmenu } from "../utils/replyhandler.js";
 
 export const start_handler = (ctx)=>{
     ctx.reply(welcomeMSg)
-    ctx.reply(getMainmenu)
+    ctx.reply(getMainmenu())
 }

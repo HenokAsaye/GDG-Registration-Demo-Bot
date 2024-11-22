@@ -6,11 +6,14 @@ const applicationSchema = new mongoose.Schema({
     description: { type: String, default: null }, 
     requirements: { type: String, default: null }, 
     closingTime: { type: Date, default: null }, 
-    status: { type: String, 
-        enum:['draft','done'],
-        default: 'draft' }, 
+    applyLink: { type: String, default: null }, 
+    status: { 
+        type: String, 
+        enum: ["draft", "done"],
+        default: "draft"
+    }, 
     createdAt: { type: Date, default: Date.now }, 
-    updatedAt: { type: Date, default: Date.now }  
+    updatedAt: { type: Date, default: Date.now }
 });
 
 applicationSchema.pre('save', function (next) {

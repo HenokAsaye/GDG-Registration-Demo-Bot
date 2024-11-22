@@ -1,11 +1,11 @@
 import {Markup} from "telegraf";
 
 
-export const getMainmenu = (ctx)=>{
+export const getMainmenu = ()=>{
      Markup.inlineKeyboard([
-        [Markup.inlineKeyboard.callback('ApplicationsOpen','Applications')],
-        [Markup.inlineKeyboard.callback("About GDG",'aboutGdg')],
-        [Markup.inlineKeyboard.callback("Help",'help')]
+        [Markup.button.callback('ApplicationsOpen','Applications')],
+        [Markup.button.callback("About GDG",'aboutGdg')],
+        [Markup.button.callback("Help",'help')]
     ])
 };
 
@@ -25,8 +25,8 @@ export const openPositions = (Position)=>{
 export const applyOrCallBack = ()=>{
 
     return Markup.inlineKeyboard([
-        [Markup.inlineKeyboard.callback('Apply',link)],
-        [Markup.inlineKeyboard.callback('BackToMenu','backtomenu')],
+        [Markup.button.callback('Apply',link)],
+        [Markup.button.callback('BackToMenu','backtomenu')],
     ])
 
 }
@@ -35,11 +35,11 @@ export const applyOrCallBack = ()=>{
 
 export const adminFunctionality = ()=>{
     return Markup.inlineKeyboard([
-        [Markup.inlineKeyboard.callback('Title',"addTitle")],
-        [Markup.inlineKeyboard.callback('Descrition','addDescription')],
-        [Markup.inlineKeyboard.callback('Requirements',"addRequirements")],
-        [Markup.inlineKeyboard.callback('CloseTime','addClosingTime')],
-        [Markup.inlineKeyboard.callback('Done','FinishAdding')]
+        [Markup.button.callback('Title',"addTitle")],
+        [Markup.button.callback('Descrition','addDescription')],
+        [Markup.button.callback('Requirements',"addRequirements")],
+        [Markup.button.callback('CloseTime','addClosingTime')],
+        [Markup.button.callback('Done','FinishAdding')]
     ])
 }
 
