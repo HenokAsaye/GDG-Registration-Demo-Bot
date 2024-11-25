@@ -1,23 +1,8 @@
 import { getMainmenu,openPositions,applyOrCallBack } from "../utils/replyhandler.js";
-import {Position} from "../models/offerModel.js";
+import Position from "../models/offerModel.js";
 
 
 export const DetailAboutTheOffer = (bot)=>{
-    try {
-        bot.action('Applications',async(ctx)=>{
-            const position = await Position.find({status:'done', closeTime:closeTime > Date.now()});
-            if(position.length === 0){
-                ctx.reply("No Application is Open for now,Please be Back Soon!",getMainmenu())
-            }
-    
-            ctx.reply('Here are the Open Application Currently',openPositions(position))
-        })
-        
-    } catch (error) {
-        console.log("Error Fetching the Details",errors)
-        ctx.reply("An error occurred while fetching application details.")
-    }
-
     bot.action(/^[a-f0-9]{24}$/, async (ctx) => { 
         try {
             const positionId = ctx.match[0];

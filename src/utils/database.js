@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-import Position from "../models/offerModel";
+import Position from "../models/offerModel.js";
 dotenv.config()
-import {Position} from "../models/offerModel.js"
+
 
 const client = new MongoClient(process.env.Mongo_URI)
 

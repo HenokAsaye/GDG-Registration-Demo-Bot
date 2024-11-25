@@ -1,17 +1,18 @@
-import {Markup} from "telegraf";
+import { Markup } from 'telegraf';
 
-
-export const getMainmenu = ()=>{
-     Markup.inlineKeyboard([
-        [Markup.button.callback('ApplicationsOpen','Applications')],
-        [Markup.button.callback("About GDG",'aboutGdg')],
-        [Markup.button.callback("Help",'help')]
-    ])
+export const getMainmenu = () => {
+    return Markup.inlineKeyboard([
+        [Markup.button.callback('Applications Open', 'Applications')],
+        [Markup.button.callback("About GDG", 'aboutGdg')],
+        [Markup.button.callback("Help", 'help')],
+  
+    ]);
 };
 
 
+
 export const openPositions = (Position)=>{
-    Markup.inlineKeyboard(
+    return Markup.inlineKeyboard(
         Position.map(
             (position)=>{
                 Markup.button.callback(position.title,position._id)

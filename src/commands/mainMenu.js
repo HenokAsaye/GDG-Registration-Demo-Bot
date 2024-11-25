@@ -1,11 +1,20 @@
-import { getMainmenu } from "../utils/replyhandler.js";
-import { admin_handler } from "./admin.js";
+import { getMainMenu,openPositions } from "./admin.js";
+import Position from "../models/offerModel.js"
 
 
 
 export const menuHandler = (bot)=>{
-    bot.action('Open Application',(ctx)=>{
-        ctx.reply("Here are The Application Opened By now")
+    try {
+        bot.action('Applications',async(ctx)=>{
+            const position = await Position.find({status:'draft',closingTime:closingtime > Date.now()})
+            if(position.length ===0){
+                return ctx.reply('No Application is Open BY Now!',getMainMenu())
+            }
+            ctx.reply("Applications That are open Now Are",openPositions(position))
+        })
+    } catch (error) {
+        console.log('error while fetcing the data',error)
+        throw new Error('Error while fetching the data')
+    }
 
-    })
 }
