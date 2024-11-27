@@ -2,15 +2,18 @@ import dotenv from "dotenv";
 dotenv.config()
 
 export const AdminCheck = async(ctx,next)=>{
-    const username = ctx.message?.from?.username
+    const username = ctx.from?.username
     try {
         if(!username){
             throw new Error("username not found!")
         }
-    
-        if(username === process.env.admin_username){
+        console.log()
+        if(username == (process.env.admin_username)){
+            console.log(username)
             return next()
         }else{
+            console.log(username)
+            console.log(process.env.admin_username)
             throw new Error("You are not eligible for this service.")
         }
     

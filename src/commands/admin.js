@@ -1,33 +1,33 @@
 import { adminFunctionality } from "../utils/replyhandler.js";
 import { saveApplicationtoDb } from "../utils/database.js";
 import { markApplicationAsDone } from "../utils/database.js";
+import moment from "moment"
 
 const adminStatus = {}; 
 
 export const addApplication = (ctx) => {
-    ctx.reply(`Add the Applications that will be Open Soon`, adminFunctionality);
+    ctx.reply(`Add the Applications that will be Open Soon`, adminFunctionality());
 };
 
 export const admin_handler = (bot) => {
-    bot.action("title", (ctx) => {
+    bot.action("addTitle", (ctx) => {
         ctx.reply("Enter the title of the Application:");
         adminStatus[ctx.from.id] = { action: "title" };
         ctx.answerCbQuery();
     });
-
-    bot.action("Description", (ctx) => {
+    bot.action("addDescription", (ctx) => {
         ctx.reply("Add the description about the Application:");
         adminStatus[ctx.from.id] = { action: "Description" };
         ctx.answerCbQuery();
     });
 
-    bot.action("Requirements", (ctx) => {
+    bot.action("addRequirements", (ctx) => {
         ctx.reply("Add the requirements for the Application:");
         adminStatus[ctx.from.id] = { action: "Requirements" };
         ctx.answerCbQuery();
     });
 
-    bot.action("ClosingTime", (ctx) => {
+    bot.action("addClosingTime", (ctx) => {
         ctx.reply("Add the deadline for the Application:");
         adminStatus[ctx.from.id] = { action: "ClosingTime" };
         ctx.answerCbQuery();
@@ -41,9 +41,10 @@ export const admin_handler = (bot) => {
             console.error(error);
         }
         adminStatus[ctx.from.id] = null;
-        answerCbQuery("You have Done you Process!")
+        ctx.answerCbQuery("You have Done you Process!")
     })
-    bot.on("text", async(ctx) => {
+
+    bot.on("text", async (ctx) => {
         const adminAction = adminStatus[ctx.from.id];
 
         if (!adminAction) {
@@ -55,23 +56,36 @@ export const admin_handler = (bot) => {
             title: "Title",
             Description: "Description",
             Requirements: "Requirements",
-            ClosingTime: "Closing Time",
-            FinishAdding:'FinishAddding'
+            ClosingTime: "ClosingTime",
+            FinishAdding: 'FinishAdding',
         };
-        const adminId = ctx.from.id
+
+        const adminId = ctx.from.id;
         const field = adminAction.action;
         const value = ctx.message.text;
-        if(fieldMap[field]){
+
+        if (field === "ClosingTime") {
+            const closingTime = moment(value, "DD/MM/YYYY", true);  
+
+            if (!closingTime.isValid()) {
+                ctx.reply("The closing time format is invalid. Please use 'DD/MM/YYYY' format.");
+                return;
+            }
+            const closingTimeDate = closingTime.startOf('day').toDate(); 
+            await saveApplicationtoDb(adminId, field, closingTimeDate);
+            ctx.reply(`The ${field} is set to ${closingTime.format("DD/MM/YYYY")}`);
+        } else if (fieldMap[field]) {
             try {
-                await saveApplicationtoDb(adminId,field,value)
-                ctx.reply(`The ${field} is set with ${value}`)
+                await saveApplicationtoDb(adminId, field, value);
+                ctx.reply(`The ${field} is set with ${value}`);
             } catch (error) {
                 ctx.reply("An error occurred while saving the data. Please try again.");
                 console.error(error);
             }
-        }else{
-            ctx.reply("Unkown Action,Please Try Again")
+        } else {
+            ctx.reply("Unknown Action, Please Try Again");
         }
-        delete adminStatus[ctx.from.id];
+
+        delete adminStatus[ctx.from.id];  
     });
 };

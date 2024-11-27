@@ -10,7 +10,8 @@ const applicationSchema = new mongoose.Schema({
     status: { 
         type: String, 
         enum: ["draft", "done"],
-        default: "draft"
+        default: "draft",
+        index:true
     }, 
     createdAt: { type: Date, default: Date.now }, 
     updatedAt: { type: Date, default: Date.now }

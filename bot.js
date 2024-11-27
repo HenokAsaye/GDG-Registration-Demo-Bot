@@ -5,7 +5,7 @@ dotenv.config();
 
 const bot = new Telegraf(process.env.TELEGRAM_TOKEN)
 bot.use(async(ctx,next)=>{
-    console.log(`Message from ${ctx.from.username}: ${ctx.message?.text}`);
+    console.log(`Message from ${ctx.from.username}: ${ctx.message?.text} || ${ctx.from.id}`);
     await next();
 })
 

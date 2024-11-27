@@ -1,20 +1,36 @@
-import { getMainMenu,openPositions } from "./admin.js";
-import Position from "../models/offerModel.js"
-
-
-
-export const menuHandler = (bot)=>{
+import { getMainmenu, openPositions } from "../utils/replyhandler.js";
+import { connectToDb, getDb } from "../utils/database.js";
+const WelcomeMsg = `Welcome to gdg`
+export const menuHandler = (bot) => {
     try {
-        bot.action('Applications',async(ctx)=>{
-            const position = await Position.find({status:'draft',closingTime:closingtime > Date.now()})
-            if(position.length ===0){
-                return ctx.reply('No Application is Open BY Now!',getMainMenu())
+        bot.action('Applications', async (ctx) => {
+            try {
+                const db = await connectToDb(); 
+                const positionCollection = db.collection('positions');
+                const currentDate = new Date();
+                const openPositionsList = await positionCollection.find({ status: 'done', closingTime: { $gt: currentDate } }).toArray();
+
+                if (openPositionsList.length === 0) {
+                    ctx.answerCbQuery()
+                    return ctx.reply("There is not an open position currently", getMainmenu());
+                }
+                ctx.reply("Open positions currently are", openPositions(openPositionsList));
+                await ctx.answerCbQuery("Here are the applications that are open.");
+            } catch (error) {
+                console.error("Error while finding open positions", error);
+                ctx.reply("Error while finding the open positions. Please try again.");
+                ctx.answerCbQuery();
             }
-            ctx.reply("Applications That are open Now Are",openPositions(position))
+        });
+        bot.action('aboutGdg',async(ctx)=>{
+            ctx.reply(WelcomeMsg,getMainmenu())
+            ctx.answerCbQuery()
+        })
+        bot.action('help',async(ctx)=>{
+            ctx.reply('help',getMainmenu())
+            ctx.answerCbQuery()
         })
     } catch (error) {
-        console.log('error while fetcing the data',error)
-        throw new Error('Error while fetching the data')
+        console.error('Error while setting up the menu handler', error);
     }
-
-}
+};
