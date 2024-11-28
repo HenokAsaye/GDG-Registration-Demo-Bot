@@ -6,14 +6,19 @@ export const menuHandler = (bot) => {
         bot.action('Applications', async (ctx) => {
             try {
                 const db = await connectToDb(); 
-                const positionCollection = db.collection('positions');
+                const positionCollection = db.collection('positiones');
                 const currentDate = new Date();
-                const openPositionsList = await positionCollection.find({ status: 'done', closingTime: { $gt: currentDate } }).toArray();
-
+                console.log("Current Date:", currentDate);
+                const openPositionsList = await positionCollection.find({
+                    status: 'done',
+                    ClosingTime: { $gt: currentDate } 
+                }).toArray();
+                console.log("Open positions:", openPositionsList);
                 if (openPositionsList.length === 0) {
-                    ctx.answerCbQuery()
+                    ctx.answerCbQuery();
                     return ctx.reply("There is not an open position currently", getMainmenu());
                 }
+        
                 ctx.reply("Open positions currently are", openPositions(openPositionsList));
                 await ctx.answerCbQuery("Here are the applications that are open.");
             } catch (error) {

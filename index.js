@@ -4,20 +4,19 @@ import { start_handler } from "./src/commands/start.js";
 import { menuHandler } from "./src/commands/mainMenu.js";
 import { connectToDb } from "./src/utils/database.js";
 import { AdminCheck } from "./src/middleware/auhtMiddkeware.js";
+import { DetailAboutTheOffer } from "./src/commands/offeringDetail.js";
 
 console.log('Starting bot setup...');
 
 bot.command(['start'], start_handler);
 console.log('Start command registered');
-
 menuHandler(bot);
 console.log('Main menu handler registered');
 bot.command(['admin'],AdminCheck,(ctx)=>{
     addApplication(ctx),
     admin_handler(bot)
-}
-
-)
+})
+DetailAboutTheOffer(bot)
 console.log('Admin handler registered');
 (async () => {
     try {

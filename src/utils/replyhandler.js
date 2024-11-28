@@ -8,20 +8,15 @@ export const getMainmenu = () => {
   
     ]);
 };
-
-
-
 export const openPositions = (Position)=>{
     return Markup.inlineKeyboard(
         Position.map(
             (position)=>{
-                Markup.button.callback(position.title,position._id)
+                return Markup.button.callback(position.title,position._id.toString())
             }
         )
     )
 }
-
-
 
 export const applyOrCallBack = ()=>{
 

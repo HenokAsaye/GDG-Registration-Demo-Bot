@@ -31,6 +31,7 @@ const setupSchemaValidation = async (db) => {
             required: ["title", "description", "requirements", "closingTime", "createdBy", "status"],
             properties: {
                 title: { bsonType: "string", description: "Title of the position" },
+                link:{bsonType:"string",description:"link to apply"},
                 description: { bsonType: "string", description: "Description of the position" },
                 requirements: { bsonType: "array", items: { bsonType: "string" }, description: "Requirements for the position" },
                 closingTime: { bsonType: "date", description: "Application closing time" },
@@ -38,7 +39,7 @@ const setupSchemaValidation = async (db) => {
                 status: { bsonType: "string", enum: ["draft", "done"], description: "Application status" },
             },
         };
-        await db.createCollection("positions", {
+        await db.createCollection("positiones", {
             validator: {
                 $jsonSchema: schema,
             },
@@ -62,7 +63,7 @@ export const saveApplicationtoDb = async (adminId, field, value) => {
             },
         };
 
-        const result = await db.collection('positions').updateOne(
+        const result = await db.collection('positiones').updateOne(
             { createdBy: adminId, status: "draft" }, 
             update,
             { upsert: true } 
@@ -77,7 +78,7 @@ export const saveApplicationtoDb = async (adminId, field, value) => {
     }
 };
 export const markApplicationAsDone = async (adminId) => {
-    const draft = await db.collection("positions").findOne({ createdBy: adminId, status: "draft" });
+    const draft = await db.collection("positiones").findOne({ createdBy: adminId, status: "draft" });
     if (!draft) throw new Error("No draft application found for the admin.");
     
     const requiredFields = ["title", "Description", "Requirements", "ClosingTime"];
