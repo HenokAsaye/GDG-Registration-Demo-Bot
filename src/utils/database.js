@@ -39,14 +39,14 @@ const setupSchemaValidation = async (db) => {
                 status: { bsonType: "string", enum: ["draft", "done"], description: "Application status" },
             },
         };
-        await db.createCollection("positiones", {
+        await db.createCollection("newPositions", {
             validator: {
                 $jsonSchema: schema,
             },
             validationAction: "warn", 
         });
 
-        console.log("Schema validation for the 'positions' collection set up successfully.");
+        console.log("Schema validation for the 'newPositions' collection set up successfully.");
     } catch (error) {
         console.error("Error setting up schema validation:", error);
     }
@@ -63,7 +63,7 @@ export const saveApplicationtoDb = async (adminId, field, value) => {
             },
         };
 
-        const result = await db.collection('positiones').updateOne(
+        const result = await db.collection('newPositions').updateOne(
             { createdBy: adminId, status: "draft" }, 
             update,
             { upsert: true } 
@@ -78,10 +78,10 @@ export const saveApplicationtoDb = async (adminId, field, value) => {
     }
 };
 export const markApplicationAsDone = async (adminId) => {
-    const draft = await db.collection("positiones").findOne({ createdBy: adminId, status: "draft" });
+    const draft = await db.collection("newPositions").findOne({ createdBy: adminId, status: "draft" });
     if (!draft) throw new Error("No draft application found for the admin.");
     
-    const requiredFields = ["title", "Description", "Requirements", "ClosingTime"];
+    const requiredFields = ["title", "Description", "Requirements", "ClosingTime","Link"];
     
     for (const field of requiredFields) {
         if (!draft[field]) {
@@ -93,7 +93,7 @@ export const markApplicationAsDone = async (adminId) => {
         }
     }
 
-    const result = await db.collection("positions").updateOne(
+    const result = await db.collection("newPositions").updateOne(
         { createdBy: adminId, status: "draft" },
         { $set: { status: "done" } }
     );

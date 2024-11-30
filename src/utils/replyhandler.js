@@ -17,15 +17,19 @@ export const openPositions = (Position)=>{
         )
     )
 }
-
-export const applyOrCallBack = ()=>{
-
+export const applyOrCallBack = (link) => {
+    if (!link) {
+        return Markup.inlineKeyboard([
+            [Markup.button.callback('No Apply Link Available', 'noLink')],
+            [Markup.button.callback('BackToMenu', 'backtomenu')],
+        ]);
+    }
     return Markup.inlineKeyboard([
-        [Markup.button.callback('Apply',link)],
-        [Markup.button.callback('BackToMenu','backtomenu')],
-    ])
+        [Markup.button.url('Apply', link)], 
+        [Markup.button.callback('BackToMenu', 'backtomenu')],
+    ]);
+};
 
-}
 
 
 
@@ -35,6 +39,7 @@ export const adminFunctionality = ()=>{
         [Markup.button.callback('Descrition','addDescription')],
         [Markup.button.callback('Requirements',"addRequirements")],
         [Markup.button.callback('CloseTime','addClosingTime')],
+        [Markup.button.callback('Link','applyLink')],
         [Markup.button.callback('Done','FinishAdding')]
     ])
 }

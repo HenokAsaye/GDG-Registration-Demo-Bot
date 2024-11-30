@@ -6,7 +6,7 @@ export const menuHandler = (bot) => {
         bot.action('Applications', async (ctx) => {
             try {
                 const db = await connectToDb(); 
-                const positionCollection = db.collection('positiones');
+                const positionCollection = db.collection('newPositions');
                 const currentDate = new Date();
                 console.log("Current Date:", currentDate);
                 const openPositionsList = await positionCollection.find({
