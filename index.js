@@ -5,43 +5,45 @@ import { menuHandler } from "./src/commands/mainMenu.js";
 import { connectToDb } from "./src/utils/database.js";
 import { AdminCheck } from "./src/middleware/auhtMiddkeware.js";
 import { DetailAboutTheOffer } from "./src/commands/offeringDetail.js";
+import {Logger} from "./config.js";
+import db from "./src/utils/database.js"
 
 console.log('Starting bot setup...');
 
 bot.command(['start'], start_handler);
-console.log('Start command registered');
+Logger.info('Start command registered');
 menuHandler(bot);
-console.log('Main menu handler registered');
+Logger.info('Main menu handler registered');
 bot.command(['admin'],AdminCheck,(ctx)=>{
     addApplication(ctx),
     admin_handler(bot)
 })
 DetailAboutTheOffer(bot)
-console.log('Admin handler registered');
+Logger.info('Admin handler registered');
 (async () => {
     try {
-        console.log('Connecting to the database...');
+        Logger.info('Connecting to the database...');
         const db = await connectToDb();
-        console.log('Database connection established');
+        Logger.info('Database connection established');
 
-        console.log('Launching bot...');
+        Logger.info('Launching bot...');
         bot.launch().catch((error) => {
-            console.error('Error during bot launch:', error);
+            Logger.error('Error during bot launch:', error);
         });
         
         console.log('Bot is running...');
     } catch (error) {
-        console.error('Failed to connect to the database or launch the bot:', error);
+        Logger.error('Failed to connect to the database or launch the bot:', error);
     }
 })();
 
 
 process.once('SIGINT', async () => {
     await bot.stop('SIGINT');
-    console.log('Bot stopped due to SIGINT');
+    Logger.info('Bot stopped due to SIGINT');
 });
 
 process.once('SIGTERM', async () => {
     await bot.stop('SIGTERM');
-    console.log('Bot stopped due to SIGTERM');
+    Logger.info('Bot stopped due to SIGTERM');
 });

@@ -1,5 +1,6 @@
 import { getMainmenu, applyOrCallBack } from "../utils/replyhandler.js";
 import { connectToDb } from "../utils/database.js";
+import {Logger} from "../../config.js"
 import { ObjectId } from "mongodb";
 
 export const DetailAboutTheOffer = (bot) => {
@@ -9,7 +10,7 @@ export const DetailAboutTheOffer = (bot) => {
             const db = await connectToDb();
             const positionCollection = db.collection('newPositions');
             const positionId = ctx.callbackQuery.data; 
-            console.log("Client Action Triggered:", positionId);
+            Logger.info("Client Action Triggered:", positionId);
             const position = await positionCollection.findOne({ _id: new ObjectId(positionId) });
             if (!position) {
                 ctx.answerCbQuery();
@@ -18,16 +19,16 @@ export const DetailAboutTheOffer = (bot) => {
 
             ctx.answerCbQuery();
             const descriptionText = `**${position.title}**\n\n${position.Requirements || 'No description available.'}`;
-            console.log("Fetched Position:", position);
+            Logger.info("Fetched Position:", position);
             ctx.replyWithMarkdown(descriptionText, applyOrCallBack(position.Link));
         } catch (error) {
-            console.error("Error fetching position details:", error);
+            Logger.error("Error fetching position details:", error);
             ctx.reply("An error occurred while fetching application details.");
         }
     });
 
     bot.action('backtomenu', async (ctx) => {
-        console.log("Client Action Triggered: backtomenu");
+        Logger.info("Client Action Triggered: backtomenu");
         ctx.reply("Mainmenu", getMainmenu());
         ctx.answerCbQuery()
     });

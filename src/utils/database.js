@@ -1,5 +1,6 @@
 import moment from 'moment';  
 import { MongoClient } from "mongodb";
+import {Logger} from "../../config.js"
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -11,12 +12,12 @@ export const connectToDb = async () => {
         if (!db) {
             await client.connect();
             db = client.db("GDGApplication");
-            console.log("Database connection established");
+            Logger.info("Database connection established");
             await setupSchemaValidation(db);
         }
         return db;
     } catch (error) {
-        console.error("Error while connecting to the database:", error);
+        Logger.error("Error while connecting to the database:", error);
         throw error;
     }
 };
@@ -46,9 +47,9 @@ const setupSchemaValidation = async (db) => {
             validationAction: "warn", 
         });
 
-        console.log("Schema validation for the 'newPositions' collection set up successfully.");
+        Logger.info("Schema validation for the 'newPositions' collection set up successfully.");
     } catch (error) {
-        console.error("Error setting up schema validation:", error);
+        Logger.error("Error setting up schema validation:", error);
     }
 };
 export default db;
@@ -73,7 +74,7 @@ export const saveApplicationtoDb = async (adminId, field, value) => {
             throw new Error("Failed to update or create the application.");
         }
     } catch (error) {
-        console.error("Error saving application data:", error);
+        Logger.error("Error saving application data:", error);
         throw error;
     }
 };

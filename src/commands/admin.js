@@ -1,6 +1,7 @@
 import { adminFunctionality } from "../utils/replyhandler.js";
 import { saveApplicationtoDb } from "../utils/database.js";
 import { markApplicationAsDone } from "../utils/database.js";
+import {Logger} from "../../config.js"
 import moment from "moment"
 
 const adminStatus = {}; 
@@ -45,8 +46,8 @@ export const admin_handler = (bot) => {
             await markApplicationAsDone(ctx.from.id);
             ctx.reply("The application has been successfully finalized and marked as 'done'.");
         } catch (error) {
-            ctx.reply(`An error occurred: ${error.message}`);
-            console.error(error);
+            ctx.reply(`An error occurred: Please try Again!`);
+            Logger.error(error);
         }
         adminStatus[ctx.from.id] = null;
         ctx.answerCbQuery("You have completed your process!");
@@ -88,7 +89,7 @@ export const admin_handler = (bot) => {
                 ctx.reply(`The ${field} is set to "${value}"`);
             } catch (error) {
                 ctx.reply("An error occurred while saving the data. Please try again.");
-                console.error(error);
+                Logger.error(error);
             }
         } else {
             ctx.reply("Unknown Action. Please Try Again.");

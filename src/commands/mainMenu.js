@@ -1,5 +1,6 @@
 import { getMainmenu, openPositions } from "../utils/replyhandler.js";
 import { connectToDb, getDb } from "../utils/database.js";
+import {Logger} from "../../config.js"
 const WelcomeMsg = `Welcome to gdg`
 export const menuHandler = (bot) => {
     try {
@@ -8,12 +9,12 @@ export const menuHandler = (bot) => {
                 const db = await connectToDb(); 
                 const positionCollection = db.collection('newPositions');
                 const currentDate = new Date();
-                console.log("Current Date:", currentDate);
+                Logger.info("Current Date:", currentDate);
                 const openPositionsList = await positionCollection.find({
                     status: 'done',
                     ClosingTime: { $gt: currentDate } 
                 }).toArray();
-                console.log("Open positions:", openPositionsList);
+                Logger.info("Open positions:", openPositionsList);
                 if (openPositionsList.length === 0) {
                     ctx.answerCbQuery();
                     return ctx.reply("There is not an open position currently", getMainmenu());
@@ -22,7 +23,7 @@ export const menuHandler = (bot) => {
                 ctx.reply("Open positions currently are", openPositions(openPositionsList));
                 await ctx.answerCbQuery("Here are the applications that are open.");
             } catch (error) {
-                console.error("Error while finding open positions", error);
+                Logger.error("Error while finding open positions", error);
                 ctx.reply("Error while finding the open positions. Please try again.");
                 ctx.answerCbQuery();
             }
@@ -36,6 +37,6 @@ export const menuHandler = (bot) => {
             ctx.answerCbQuery()
         })
     } catch (error) {
-        console.error('Error while setting up the menu handler', error);
+        Logger.error('Error while setting up the menu handler', error);
     }
 };
